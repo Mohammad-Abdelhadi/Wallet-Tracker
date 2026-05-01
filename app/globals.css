@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0D2B1E;
+  --color-app: #111111;
+  --color-surface: rgba(13, 43, 30, 0.7);
+  --color-surface-hover: rgba(13, 43, 30, 0.9);
+  --color-surface-light: rgba(34, 227, 166, 0.1);
+  --color-primary: #FFFFFF;
+  --color-secondary: #94A3B8;
+  --color-tertiary: #64748B;
+  --color-accent: #22E3A6; 
+  --color-accent-subtle: rgba(34, 227, 166, 0.15);
+  --color-border: rgba(34, 227, 166, 0.1);
+  --color-border-subtle: rgba(13, 43, 30, 0.3);
+  
+  --font-sans: var(--font-sans), sans-serif;
+  --font-poppins: var(--font-poppins), sans-serif;
+  --font-mono: var(--font-mono), monospace;
+}
+
+/* Remove number input spin buttons */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+body {
+  /* لون الخلفية الأساسي: أخضر غابة عميق جداً */
+background: linear-gradient(
+    90deg, 
+    174deg, 
+    #050706 -44%,   
+    #1a3a2a 58%,  
+    #050706 142% 
+  );
+  background-attachment: fixed;  /* تفاصيل الخط */
+  color: var(--color-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}/* Hide scrollbar for clean look */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Utilities for hiding scrollbar but allowing scroll */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

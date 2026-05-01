@@ -1,0 +1,8 @@
+{
+  "name": "Wallet Tracker",
+  "description": "مساعد مالي ذكي وحساب رقمي فاخر للعناية بأموالك.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": []
+}

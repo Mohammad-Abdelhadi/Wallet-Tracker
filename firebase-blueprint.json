@@ -1,0 +1,61 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with selected banks",
+      "type": "object",
+      "properties": {
+        "selectedBanks": { "type": "array", "items": { "type": "string" } },
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["selectedBanks", "updatedAt"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Financial transaction",
+      "type": "object",
+      "properties": {
+        "amount": { "type": "number" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "type": { "type": "string", "enum": ["income", "expense", "transfer"] },
+        "icon": { "type": "string" },
+        "walletId": { "type": "string" },
+        "bankName": { "type": "string" },
+        "source": { "type": "string", "enum": ["sms", "voice", "manual"] },
+        "originalMsg": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "merchant": { "type": "string" }
+      },
+      "required": ["amount", "category", "description", "type", "date"]
+    },
+    "Jar": {
+      "title": "Jar",
+      "description": "Savings jar",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "targetAmount": { "type": "number" },
+        "currentAmount": { "type": "number" },
+        "icon": { "type": "string" }
+      },
+      "required": ["name", "targetAmount", "currentAmount", "icon"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Stores user profiles"
+    },
+    "/users/{userId}/transactions/{transactionId}": {
+      "schema": { "$ref": "#/entities/Transaction" },
+      "description": "Stores user transactions"
+    },
+    "/users/{userId}/jars/{jarId}": {
+      "schema": { "$ref": "#/entities/Jar" },
+      "description": "Stores user jars"
+    }
+  }
+}

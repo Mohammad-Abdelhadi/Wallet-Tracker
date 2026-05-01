@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Phase 3: Primitive Definitions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Pillar 2: Validation Blueprints
+    function isValidUser(data) {
+      return data.keys().size() <= 12 && 
+             (!('selectedBanks' in data) || (data.selectedBanks is list && data.selectedBanks.size() <= 50)) &&
+             (!('updatedAt' in data) || (data.updatedAt is string && data.updatedAt.size() <= 100)) &&
+             (!('subscriptionTier' in data) || data.subscriptionTier in ['free', 'mid', 'pro']) &&
+             (!('aiUsageCount' in data) || data.aiUsageCount is number) &&
+             (!('language' in data) || data.language in ['ar', 'en']) &&
+             (!('email' in data) || (data.email is string && data.email.size() <= 255)) &&
+             (!('name' in data) || (data.name is string && data.name.size() <= 255));
+    }
+
+    function isValidTransaction(data) {
+      return data.keys().hasAll(['amount', 'category', 'description', 'type', 'date']) &&
+             data.keys().size() <= 13 &&
+             data.amount is number &&
+             data.category is string && data.category.size() <= 100 &&
+             data.description is string && data.description.size() <= 500 &&
+             data.type in ['income', 'expense', 'transfer'] &&
+             data.date is string && data.date.size() <= 50 &&
+             (!('walletId' in data) || (data.walletId is string && data.walletId.size() <= 128)) &&
+             (!('merchant' in data) || (data.merchant is string && data.merchant.size() <= 200)) &&
+             (!('icon' in data) || (data.icon is string && data.icon.size() <= 50)) &&
+             (!('bankName' in data) || (data.bankName is string && data.bankName.size() <= 100)) &&
+             (!('source' in data) || (data.source in ['sms', 'voice', 'manual'])) &&
+             (!('originalMsg' in data) || (data.originalMsg is string && data.originalMsg.size() <= 2000));
+    }
+
+    function isValidJar(data) {
+      return data.keys().hasAll(['name', 'targetAmount', 'currentAmount', 'icon']) &&
+             data.keys().size() == 4 &&
+             data.name is string && data.name.size() <= 100 &&
+             data.targetAmount is number && data.targetAmount >= 0 &&
+             data.currentAmount is number && data.currentAmount >= 0 &&
+             data.icon is string && data.icon.size() <= 50;
+    }
+
+    // Rules
+    match /users/{userId} {
+      // Pillar 3: Path Variable Hardening
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow create: if isOwner(userId) && isValidId(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && isValidId(userId) && isValidUser(incoming());
+
+      match /transactions/{transactionId} {
+        allow list: if isOwner(userId); // Pillar 8: Secure List Queries
+        allow get: if isOwner(userId) && isValidId(transactionId);
+        allow create: if isOwner(userId) && isValidId(transactionId) && isValidTransaction(incoming());
+        // For transactions, we might allow updates to merchant or description, but usually transactions are immutable
+        allow update: if isOwner(userId) && isValidId(transactionId) && isValidTransaction(incoming()) &&
+                      incoming().diff(existing()).affectedKeys().hasOnly(['category', 'description', 'merchant']);
+        allow delete: if isOwner(userId) && isValidId(transactionId);
+      }
+
+      match /jars/{jarId} {
+        allow list: if isOwner(userId);
+        allow get: if isOwner(userId) && isValidId(jarId);
+        allow create: if isOwner(userId) && isValidId(jarId) && isValidJar(incoming());
+        allow update: if isOwner(userId) && isValidId(jarId) && isValidJar(incoming()) && (
+          // Action: Update Amount
+          (incoming().diff(existing()).affectedKeys().hasOnly(['currentAmount'])) ||
+          // Action: Edit Jar Details
+          (incoming().diff(existing()).affectedKeys().hasOnly(['name', 'targetAmount', 'icon']))
+        );
+        allow delete: if isOwner(userId) && isValidId(jarId);
+      }
+    }
+  }
+}
