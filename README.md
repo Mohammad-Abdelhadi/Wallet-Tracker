@@ -3,6 +3,10 @@
 
 تطبيق **Wallet Tracker** هو تطبيق ذكي باستخدام ادوات الذكاء الاصطناعي صمم لحل مشكلة تشتت الحسابات في السوق الأردني، حيث يوجد أكثر من **2.5 مليون بطاقة بنكية** نشطة لكنها موزعة بين تطبيقات ومنصات متعددة.
 
+## 🎥 فيديو توضيحي
+
+[![فيديو توضيحي للمشروع ](https://img.youtube.com/vi/-FcBsQiQBAQ/0.jpg)](https://youtu.be/-FcBsQiQBAQ)
+
 #### 🚩 المشكلة: تشتت البطاقات والحسابات
 يعاني المستخدم في الأردن من التنقل بين تطبيقات البنوك المختلفة (Reflect، Safwa، الخ) والمحافظ الإلكترونية (ZainCash، OrangeMoney). هذا التشتت يجعل من الصعب معرفة إجمالي رصيدك أو تتبع نمط مصاريفك دون جهد يدوي كبير.
 
@@ -36,6 +40,9 @@
 ### [English Version]
 
 **Wallet Tracker** is an intelligent financial dashboard designed to solve the problem of financial fragmentation in Jordan, where over **2.5 million bank cards** are active but scattered across multiple apps and platforms.
+
+[![Watch Demo](https://img.youtube.com/vi/-FcBsQiQBAQ/0.jpg)](https://youtu.be/-FcBsQiQBAQ)
+
 
 #### 🚩 The Problem: Card Fragmentation
 Users in Jordan often juggle between several banking apps (Reflect, Safwa, Bank al Etihad, etc.) and digital wallets (ZainCash, OrangeMoney). This makes it nearly impossible to have a clear view of your total net worth or spending habits without manual effort.
